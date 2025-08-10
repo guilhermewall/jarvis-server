@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+model Room {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  capacity  Int      @default(3)
+  visits    Visit[]
+  createdAt DateTime @default(now())
+}
+
+model Visit {
+  id         String    @id @default(cuid())
+  name       String
+  cpf        String
+  email      String?
+  birthDate  DateTime?
+  roomId     String
+  room       Room      @relation(fields: [roomId], references: [id])
+  checkInAt  DateTime  @default(now())
+  checkOutAt DateTime?
+  createdBy  String?
+}
+
+model Log {
+  id        String   @id @default(cuid())
+  level     String
+  message   String
+  meta      Json?
+  createdAt DateTime @default(now())
+}

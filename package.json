@@ -1,0 +1,47 @@
+{
+  "name": "jarvis-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsx watch src/server.ts",
+    "start": "node build/server.js",
+    "build": "tsup src --out-dir build --format esm",
+    "prisma:seed": "tsx prisma/seed.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guilhermewall/jarvis-server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/guilhermewall/jarvis-server/issues"
+  },
+  "homepage": "https://github.com/guilhermewall/jarvis-server#readme",
+  "devDependencies": {
+    "@eslint/js": "9.32.0",
+    "@types/bcryptjs": "2.4.6",
+    "@types/node": "24.2.0",
+    "eslint": "9.32.0",
+    "globals": "16.3.0",
+    "jiti": "2.5.1",
+    "prisma": "6.13.0",
+    "tsup": "8.5.0",
+    "tsx": "4.20.3",
+    "typescript": "5.9.2",
+    "typescript-eslint": "8.39.0"
+  },
+  "dependencies": {
+    "@fastify/cors": "11.1.0",
+    "@fastify/formbody": "8.0.2",
+    "@fastify/jwt": "9.1.0",
+    "@prisma/client": "6.13.0",
+    "bcryptjs": "3.0.2",
+    "dotenv": "17.2.1",
+    "fastify": "5.4.0",
+    "zod": "4.0.14"
+  }
+}

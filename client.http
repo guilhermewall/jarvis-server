@@ -1,0 +1,76 @@
+@baseUrl = http://localhost:3333
+
+###
+# 1) Login
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@stark.com",
+  "password": "admin123"
+}
+
+###
+# 2) Token
+@token = {{login.response.body.$.token}}
+
+###
+# 3) Salas
+# @name rooms
+GET {{baseUrl}}/rooms
+Authorization: Bearer {{token}}
+
+###
+# 4) Usa a primeira sala (troque o índice se quiser outra)
+@roomId = {{rooms.response.body.$[0].id}}
+
+###
+# 5) Check-in (criar visitante) — isso gera log "visit.checkin"
+# @name create
+POST {{baseUrl}}/visitors
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Maria Romanoff",
+  "cpf": "12345678909",
+  "roomId": "{{roomId}}",
+  "email": "maria@example.com",
+  "birthDate": "1995-04-20"
+}
+
+###
+# 6) Pega o ID do visitante recém-criado
+@visitId = {{create.response.body.$.id}}
+
+###
+# 7) Lista ativos (opcional, só pra conferir)
+GET {{baseUrl}}/visitors/active
+Authorization: Bearer {{token}}
+
+###
+# 8) Checkout — isso gera log "visit.checkout"
+POST {{baseUrl}}/visitors/{{visitId}}/checkout
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{}
+
+###
+# 9) Logs — agora deve aparecer auth.login, visit.checkin e visit.checkout
+GET {{baseUrl}}/logs?page=1&pageSize=20&level=info
+Authorization: Bearer {{token}}
+
+###
+# (opcional) Filtrar por mensagem
+GET {{baseUrl}}/logs?search=visit.checkin
+Authorization: Bearer {{token}}
+
+GET {{baseUrl}}/logs?search=auth.login
+Authorization: Bearer {{token}}
+
+###
+# 10) Histórico (pra ver a visita no passado)
+GET {{baseUrl}}/visits/history?page=1&pageSize=10
+Authorization: Bearer {{token}}
