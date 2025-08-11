@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "start": "node build/server.js",
-    "build": "tsup src/server.ts --out-dir build --format cjs --target node18 --sourcemap --clean --external:@prisma/client",
+    "build": "tsup src/server.ts --out-dir build --format cjs --target node18 --sourcemap --clean --external @prisma/client",
     "prisma:seed": "tsx prisma/seed.ts",
     "prisma:deploy": "prisma migrate deploy && npm run prisma:seed",
     "deploy:production": "npm run build && npm run prisma:deploy",
