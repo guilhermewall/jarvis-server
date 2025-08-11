@@ -12,8 +12,8 @@ Sistema de controle de acesso e visitantes para salas, desenvolvido com **Fastif
 
 ## 📋 Pré-requisitos
 
-- **Node.js** 18+ 
-- **PostgreSQL** 
+- **Node.js** 18+
+- **PostgreSQL**
 - **Docker** (opcional)
 
 ## ⚙️ Instalação
@@ -51,6 +51,7 @@ PORT=3333
 ## 📖 Documentação da API
 
 ### Base URL
+
 ```
 http://localhost:3333
 ```
@@ -58,6 +59,7 @@ http://localhost:3333
 ### 🔐 Autenticação
 
 #### Login
+
 ```http
 POST /auth/login
 Content-Type: application/json
@@ -69,6 +71,7 @@ Content-Type: application/json
 ```
 
 **Resposta:**
+
 ```json
 {
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
@@ -78,12 +81,14 @@ Content-Type: application/json
 ### 🏢 Salas
 
 #### Listar salas
+
 ```http
 GET /rooms
 Authorization: Bearer {token}
 ```
 
 **Resposta:**
+
 ```json
 [
   {
@@ -93,7 +98,7 @@ Authorization: Bearer {token}
     "activeCount": 0
   },
   {
-    "id": "cme6z2eqr0002ga8eptktkyvp", 
+    "id": "cme6z2eqr0002ga8eptktkyvp",
     "name": "Sala 13",
     "capacity": 6,
     "activeCount": 0
@@ -104,6 +109,7 @@ Authorization: Bearer {token}
 ### 👥 Visitantes
 
 #### Listar visitantes ativos
+
 ```http
 GET /visitors/active
 Authorization: Bearer {token}
@@ -113,6 +119,7 @@ GET /visitors/active?roomId={roomId}&search={nome_ou_cpf}
 ```
 
 #### Check-in de visitante
+
 ```http
 POST /visitors
 Authorization: Bearer {token}
@@ -128,6 +135,7 @@ Content-Type: application/json
 ```
 
 #### Check-out de visitante
+
 ```http
 POST /visitors/checkout
 Authorization: Bearer {token}
@@ -141,6 +149,7 @@ Content-Type: application/json
 ### 📊 Histórico e Relatórios
 
 #### Histórico de visitas
+
 ```http
 GET /history
 Authorization: Bearer {token}
@@ -150,6 +159,7 @@ GET /history?roomId={roomId}&startDate=2025-08-01&endDate=2025-08-31
 ```
 
 #### Logs do sistema
+
 ```http
 GET /logs
 Authorization: Bearer {token}
@@ -205,12 +215,14 @@ npm run deploy:production  # Build + deploy completo
 O sistema vem com dados pré-configurados:
 
 **👤 Usuário Admin:**
+
 - Email: `admin@stark.com`
 - Senha: `admin123`
 
 **🏢 Salas:**
+
 - Sala 01 (4 pessoas)
-- Sala 13 (6 pessoas) 
+- Sala 13 (6 pessoas)
 - Sala 42 (8 pessoas)
 - Laboratório (12 pessoas)
 - Auditório (50 pessoas)
@@ -220,11 +232,13 @@ O sistema vem com dados pré-configurados:
 ### Render.com
 
 **Build Command:**
+
 ```bash
 npm install && npm run build && npx prisma generate
 ```
 
 **Start Command:**
+
 ```bash
 npm run prisma:deploy && npm start
 ```
@@ -234,7 +248,7 @@ Consulte `DEPLOY.md` para instruções detalhadas.
 ## 🛡️ Segurança
 
 - ✅ Autenticação JWT obrigatória
-- ✅ Validação de dados com Zod  
+- ✅ Validação de dados com Zod
 - ✅ Hash de senhas com bcrypt
 - ✅ CORS configurado
 - ✅ Logs de auditoria
@@ -254,9 +268,10 @@ ISC License - veja o arquivo [LICENSE](LICENSE) para detalhes.
 ## 👨‍💻 Autor
 
 **Guilherme Wall**
+
 - GitHub: [@guilhermewall](https://github.com/guilhermewall)
 - Projeto: [jarvis-server](https://github.com/guilhermewall/jarvis-server)
 
 ---
 
-*Feito com ❤️ e muitos bugs que viraram features* 🐛➡️✨
+_Feito com ❤️ e muitos bugs que viraram features_ 🐛➡️✨

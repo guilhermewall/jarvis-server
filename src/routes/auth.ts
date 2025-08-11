@@ -26,16 +26,12 @@ export async function registerAuthRoutes(app: FastifyInstance) {
       { expiresIn: "1d" }
     );
 
-    // loga login (visível na aba de Logs)
-    app.prisma.log
-      .create({
-        data: {
-          level: "info",
-          message: "auth.login",
-          meta: { userId: user.id, email },
-        },
-      })
-      .catch(app.log.error);
+    // Log manual adicional para login bem-sucedido
+    await app.logger.info("Login bem-sucedido", {
+      userId: user.id,
+      email: user.email,
+      action: "auth.login",
+    });
 
     return { token };
   });

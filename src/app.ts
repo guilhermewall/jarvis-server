@@ -3,6 +3,7 @@ import cors from "@fastify/cors";
 import jwt from "@fastify/jwt";
 import formbody from "@fastify/formbody";
 import { PrismaClient } from "@prisma/client";
+import { createLogger } from "./lib/logger.js";
 import { registerAuthRoutes } from "./routes/auth.js";
 import { registerRoomsRoutes } from "./routes/rooms.js";
 import { registerVisitorsRoutes } from "./routes/visitors.js";
@@ -26,10 +27,21 @@ export async function buildApp() {
     await server.prisma.$disconnect();
   });
 
-  // Guard de auth
+  // Sistema de logging automático
+  const logger = createLogger(app, {
+    excludePaths: ["/healthz", "/health"],
+    includeBody: false, // true se quiser logar o body das requisições
+    maxBodySize: 500,
+  });
+
+  // Decorar o logger para uso manual nas rotas
+  app.decorate("logger", logger);
+
+  // Guard de auth (atualizado para incluir user na request)
   app.decorate("authenticate", async function (request: any, reply: any) {
     try {
-      await request.jwtVerify();
+      const decoded = await request.jwtVerify();
+      request.user = decoded; // Salvar dados do usuário na request
     } catch {
       reply.code(401).send({ error: "Unauthorized" });
     }
@@ -53,5 +65,10 @@ declare module "fastify" {
   interface FastifyInstance {
     prisma: PrismaClient;
     authenticate: (request: any, reply: any) => Promise<void>;
+    logger: {
+      info: (message: string, meta?: any) => Promise<void>;
+      warn: (message: string, meta?: any) => Promise<void>;
+      error: (message: string, meta?: any) => Promise<void>;
+    };
   }
 }

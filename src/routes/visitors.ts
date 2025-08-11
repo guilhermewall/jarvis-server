@@ -110,20 +110,14 @@ export async function registerVisitorsRoutes(app: FastifyInstance) {
         },
       });
 
-      // log do check-in (mostrado na aba de Logs)
-      app.prisma.log
-        .create({
-          data: {
-            level: "info",
-            message: "visit.checkin",
-            meta: {
-              visitId: visit.id,
-              roomId: data.roomId,
-              userId: (req as any).user?.sub ?? null,
-            },
-          },
-        })
-        .catch(app.log.error);
+      // Log do check-in
+      await app.logger.info("Check-in realizado", {
+        visitId: visit.id,
+        visitorName: data.name,
+        visitorCpf: data.cpf,
+        roomId: data.roomId,
+        action: "visit.checkin",
+      });
 
       reply.code(201);
       return { id: visit.id };
@@ -145,19 +139,11 @@ export async function registerVisitorsRoutes(app: FastifyInstance) {
 
       if (!updated) return reply.code(404).send({ error: "Visit not found" });
 
-      // log do checkout
-      app.prisma.log
-        .create({
-          data: {
-            level: "info",
-            message: "visit.checkout",
-            meta: {
-              visitId: params.id,
-              userId: (req as any).user?.sub ?? null,
-            },
-          },
-        })
-        .catch(app.log.error);
+      // Log do checkout
+      await app.logger.info("Check-out realizado", {
+        visitId: params.id,
+        action: "visit.checkout",
+      });
 
       return { ok: true };
     }
