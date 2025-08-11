@@ -5,6 +5,7 @@ import "@fastify/jwt"; // puxa a augmentação de tipos (req.user)
 
 export async function registerVisitorsRoutes(app: FastifyInstance) {
   // Listar visitantes ATIVOS (opcionais: roomId, search)
+  // Listar visitantes ATIVOS (opcionais: roomId, search)
   app.get(
     "/visitors/active",
     { preValidation: [(app as any).authenticate] },
@@ -17,12 +18,28 @@ export async function registerVisitorsRoutes(app: FastifyInstance) {
 
       const where: any = { checkOutAt: null };
       if (roomId) where.roomId = roomId;
-      if (search) {
-        const only = search.replace(/\D/g, "");
-        where.OR = [
-          { name: { contains: search, mode: "insensitive" } },
-          { cpf: { contains: only } },
-        ];
+
+      if (search?.trim()) {
+        const s = search.trim();
+        const digits = s.replace(/\D/g, "");
+        const OR: any[] = [];
+
+        // nome: exige pelo menos 2 chars pra evitar varredura excessiva
+        if (s.length >= 2) {
+          OR.push({ name: { contains: s, mode: "insensitive" } });
+        }
+        // cpf: só entra se tiver ao menos 3 dígitos (ajuste conforme desejar)
+        if (digits.length >= 3) {
+          OR.push({ cpf: { contains: digits } });
+        }
+
+        if (OR.length) {
+          where.OR = OR;
+        } else {
+          // se o usuário digitou algo, mas não formou critério válido,
+          // não adicionamos OR (vai retornar todos daquela sala) — se preferir retornar vazio:
+          // return [];
+        }
       }
 
       const items = await app.prisma.visit.findMany({
